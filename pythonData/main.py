@@ -3,9 +3,10 @@ from aggregation import *
 if __name__ == "__main__":
     df = read_data("csv/2025.csv")
 
-    team_stats = df.groupby(['gameid', 'teamname']).agg(
-        team_dragons=('dragons', 'sum'),
-        team_firsttower=('firsttower', 'max')
-    ).reset_index()
+    # Get stats that are needed and assign to each corresponding player
+    df = get_stats(df)
 
-    df = df.merge(team_stats, on=['gameid', 'teamname'], how='left')
+    # Calculate fantasy points for draft king
+    df = calc_draft_kings_points(df)
+
+    df.to_csv('output.csv', index=False)
